@@ -10,13 +10,21 @@ package main;
  * @author Pavel
  */
 public class Node {
-    private double x;
-    private double y;
-    private String tooltip;
+    final float x;
+    final float y;
+    final String tooltip;
     
-    public Node(double x, double y, String tooltip){
+    float xCurr;
+    float yCurr;
+    int currSize;
+    
+    
+    public Node(float x, float y, String tooltip){
         this.x = x;
         this.y = y;
+        xCurr = x;
+        yCurr = y;
+        currSize = 10;
         this.tooltip = tooltip;
     }
 }
