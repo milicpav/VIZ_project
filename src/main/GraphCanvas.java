@@ -23,7 +23,7 @@ public class GraphCanvas extends JPanel {
     
     public GraphCanvas(Graph graph) {        
         this.graph = graph;
-        addMouseListener(new MouseAdapter(){
+        /*addMouseListener(new MouseAdapter(){
             public void mousePressed(MouseEvent e){
                 moveSquare(e.getX(),e.getY());
             }
@@ -33,10 +33,10 @@ public class GraphCanvas extends JPanel {
             public void mouseDragged(MouseEvent e){
                 moveSquare(e.getX(),e.getY());
             }
-        });
+        });*/
 }
     
-     private void moveSquare(int x, int y){
+  /*   private void moveSquare(int x, int y){
          
         // Current square state, stored as final variables 
         // to avoid repeat invocations of the same methods.
@@ -61,7 +61,7 @@ public class GraphCanvas extends JPanel {
                     redSquare.getWidth()+OFFSET, 
                     redSquare.getHeight()+OFFSET);
         }
-    }
+    }*/
 
 
     public void paintComponent(Graphics g) {
