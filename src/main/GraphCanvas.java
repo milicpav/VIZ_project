@@ -11,6 +11,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
 import java.awt.Graphics; 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author Pavel
@@ -28,13 +30,21 @@ public class GraphCanvas extends JPanel {
                 moveSquare(e.getX(),e.getY());
             }
         });
-
+*/
         addMouseMotionListener(new MouseAdapter(){
-            public void mouseDragged(MouseEvent e){
-                moveSquare(e.getX(),e.getY());
+            public void mouseMoved(MouseEvent e){
+                highlightNearest(e.getX(), e.getY());
+
             }
-        });*/
-}
+        });
+}       
+    private void highlightNearest(int x, int y){
+        
+        if (this.graph.highlightNearest(x, y)){
+            this.repaint();
+        }
+    
+    }
     
   /*   private void moveSquare(int x, int y){
          
@@ -66,8 +76,6 @@ public class GraphCanvas extends JPanel {
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);       
-        g.drawString("This is my custom Panel!",10,20);
-
         graph.paint(g, this.getSize());
         //redSquare.paintSquare(g);
     }  
