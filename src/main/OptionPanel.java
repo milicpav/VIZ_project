@@ -12,6 +12,7 @@ public class OptionPanel extends JPanel {
     JScrollPane listScroller;
     JTextArea selectedNodesInfo;
     JScrollPane textAreaScroller;
+    GraphCanvas graphCanvas;
 
     public OptionPanel(Graph graph) {
         this.graph = graph;
@@ -24,6 +25,7 @@ public class OptionPanel extends JPanel {
             for (Node n :
                     nodes) {
                 selectedNodesInfo.append(n.toString() + "\n");
+//                n.highlighted = true;
             }
         });
 
@@ -55,18 +57,29 @@ public class OptionPanel extends JPanel {
         selectedNodesInfo = new JTextArea();
         selectedNodesInfo.setEditable(false);
         textAreaScroller = new JScrollPane(selectedNodesInfo);
+        //graph canvas
+        graphCanvas = new GraphCanvas(graph);
+        //tmp jpanel
+        JPanel tmpJP = new JPanel();
 
 
         //layout
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        tmpJP.setLayout(new BoxLayout(tmpJP, BoxLayout.Y_AXIS));
         infoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         listScroller.setAlignmentX(Component.CENTER_ALIGNMENT);
         showButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         textAreaScroller.setAlignmentX(Component.CENTER_ALIGNMENT);
-        this.add(infoLabel);
-        this.add(listScroller);
-        this.add(showButton);
-        this.add(textAreaScroller);
+        tmpJP.add(infoLabel);
+        tmpJP.add(listScroller);
+        tmpJP.add(showButton);
+        tmpJP.add(textAreaScroller);
+//        this.add(infoLabel);
+//        this.add(listScroller);
+//        this.add(showButton);
+//        this.add(textAreaScroller);
+        this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+        this.add(graphCanvas);
+        this.add(tmpJP);
 
 
 //        this.add(graphPanel);

@@ -46,28 +46,28 @@ public class Main {
 //
 //
 //        //
-//        JFrame f2 = new JFrame("form demo");
-//        f2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        f2.add(new OptionPanel(g));
+        JFrame f2 = new JFrame("form demo");
+        f2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f2.add(new OptionPanel(g));
 //        f2.setSize(350, Toolkit.getDefaultToolkit().getScreenSize().height / 2);
-////        f2.setSize(Toolkit.getDefaultToolkit().getScreenSize());
-//        f2.setVisible(true);
-//        f2.setAlwaysOnTop(true);
+        f2.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+        f2.setVisible(true);
+        f2.setAlwaysOnTop(true);
         //
-        OptionPanel op = new OptionPanel(g);
-        GraphCanvas gc = new GraphCanvas(g);
-        JPanel jp = new JPanel();
-        jp.setLayout(new BoxLayout(jp, BoxLayout.LINE_AXIS));
-        jp.add(gc);
-        jp.add(op);
-
-
-        JFrame f3 = new JFrame("form demo");
-        f3.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f3.add(jp);
-//        f2.setSize(350, Toolkit.getDefaultToolkit().getScreenSize().height / 2);
-        f3.setSize(Toolkit.getDefaultToolkit().getScreenSize());
-        f3.setVisible(true);
+//        OptionPanel op = new OptionPanel(g);
+//        GraphCanvas gc = new GraphCanvas(g);
+//        JPanel jp = new JPanel();
+//        jp.setLayout(new BoxLayout(jp, BoxLayout.LINE_AXIS));
+//        jp.add(gc);
+//        jp.add(op);
+//
+//
+//        JFrame f3 = new JFrame("form demo");
+//        f3.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        f3.add(jp);
+////        f2.setSize(350, Toolkit.getDefaultToolkit().getScreenSize().height / 2);
+//        f3.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+//        f3.setVisible(true);
 //        f2.setAlwaysOnTop(true);
     } 
     
