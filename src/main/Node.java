@@ -31,4 +31,9 @@ public class Node {
         this.tooltip = tooltip;
         this.idx = idx;
     }
+
+    @Override
+    public String toString() {
+        return tooltip;
+    }
 }

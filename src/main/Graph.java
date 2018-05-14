@@ -198,5 +198,12 @@ public class Graph {
         }
     
     }
-    
+
+    public Node[] getNodeList() {
+        Node[] r = new Node[nodeList.size()];
+        for (int i = 0; i < nodeList.size(); i++) {
+            r[i] = nodeList.get(i);
+        }
+        return r;
+    }
 }
