@@ -21,6 +21,7 @@ import org.w3c.dom.NodeList;
 /**
  *
  * @author Pavel
+ * @coathor simon
  */
 public class Graph {
     private ArrayList<Node> nodeList;

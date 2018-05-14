@@ -8,6 +8,7 @@ package main;
 /**
  *
  * @author Pavel
+ * @coathor simon
  */
 public class Node {
     final int idx;

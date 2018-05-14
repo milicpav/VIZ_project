@@ -13,6 +13,7 @@ import java.awt.RenderingHints;
 /**
  *
  * @author Pavel
+ * @coathor simon
  */
 public class Main {
     //TODO: make a simple frame for visualization based on this and coordinates of the nodes  https://docs.oracle.com/javase/tutorial/uiswing/painting/refining.html
