@@ -38,7 +38,7 @@ public class GraphCanvas extends JPanel {
             }
         });
 }       
-    private void highlightNearest(int x, int y){
+    public void highlightNearest(int x, int y){
         
         if (this.graph.highlightNearest(x, y)){
             this.repaint();
