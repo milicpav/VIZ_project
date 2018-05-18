@@ -30,10 +30,41 @@ public class Graph {
     
     private final float CANVAS_OFFSET = 100;
     public int highlighted = -1;
+    public int focusIdx = -1;
     private float xCenter;  // centroid of x geo coordinates
     private float yCenter;  // centroid of y geo coordinates
     private float xRange;   // max x geo value - min x geo value
     private float yRange;   // max y geo value - min y geo value
+    
+    private float[] fisheyePos(float xCurr, float yCurr, float xFoc, float yFoc, Dimension displaySize){
+        float d = 0.75f;
+        float dNormX, dNormY, dMaxX, dMaxY;
+        
+        float[] res = {-1.0f, -1.0f};
+            dMaxX = (xFoc < xCurr ) ?  displaySize.width - xFoc : xFoc;
+            dNormX = Math.abs(xCurr - xFoc);
+            dMaxY = (yFoc < yCurr) ? displaySize.height - yCurr : yFoc;
+            dNormY = Math.abs(yCurr - yFoc);
+            
+        res[0] = (xCurr > xFoc) ? gFun(dNormX / dMaxX, d) * dMaxX + xFoc : 
+                -gFun(dNormX / dMaxX, d) * dMaxX + xFoc;
+        res[1] = (yCurr > yFoc) ? gFun(dNormY / dMaxY, d) * dMaxY + yFoc : 
+                -gFun(dNormY / dMaxY, d) * dMaxY + yFoc;;
+        return res;
+    }
+    
+    private float gFun(float x, float d){
+        return (d+1)*x / (d*x + 1);
+    }
+    
+    private int fisheyeSize(float xFish, float yFish, float xQ, float yQ){
+        float e = 1f;
+        float c = 1f;
+        int sGeom = Math.round(Math.min(Math.abs(xFish - xQ), Math.abs(yFish - yQ)));
+        return Math.round((float) Math.pow(sGeom * c, e));
+        
+    
+    }
     
     public void paint(Graphics gin, Dimension displaySize){
         Graphics2D g = (Graphics2D) gin;
@@ -50,29 +81,53 @@ public class Graph {
                 if (this.highlighted == i || this.highlighted == j){
                     g.setColor(Color.BLACK); 
                 }
-                    g.drawLine(Math.round(this.nodeList.get(i).xCurr), 
-                               Math.round(this.nodeList.get(i).yCurr),
-                               Math.round(this.nodeList.get(j).xCurr),
-                               Math.round(this.nodeList.get(j).yCurr));
+                    g.drawLine(Math.round(this.nodeList.get(i).xCurr + this.nodeList.get(i).currSize/2), 
+                               Math.round(this.nodeList.get(i).yCurr+ this.nodeList.get(i).currSize/2),
+                               Math.round(this.nodeList.get(j).xCurr+ this.nodeList.get(j).currSize/2),
+                               Math.round(this.nodeList.get(j).yCurr+ this.nodeList.get(j).currSize/2));
                 
             }
         }
         // Draw nodes
         for (Node n : nodeList){
+            float s = 3.0f * 10;
             g.setColor(new Color(255, 0,0));
             if (n.highlighted){
                 g.setColor(Color.BLUE);
                 g.drawString(n.tooltip,10,20);
             }
-            
             /*Compute the x and y paint coordinates*/
-            xPaint = Math.round((n.x - this.xCenter) * scale + displaySize.width / 2 );
-            yPaint = Math.round((n.y - this.yCenter) * scale + displaySize.height / 2 );
+            xPaint = Math.round((n.x - this.xCenter) * scale + displaySize.width / 2 - n.currSize/2);
+            yPaint = Math.round((n.y - this.yCenter) * scale + displaySize.height / 2 - n.currSize/2 );
             n.xCurr = xPaint;
             n.yCurr = yPaint;
-            xPaint -= n.currSize/2;
-            yPaint -= n.currSize/2;
-            g.fillOval( xPaint , yPaint, n.currSize, n.currSize);
+            
+            /*compute the transformed coordinates*/
+            if (focusIdx != -1){
+                float [] fCoordinates = fisheyePos(n.xCurr, n.yCurr, 
+                        nodeList.get(focusIdx).xCurr,
+                        nodeList.get(focusIdx).yCurr,
+                        displaySize);
+                float vecMag = (float) Math.hypot(n.xCurr - nodeList.get(focusIdx).xCurr,
+                            n.yCurr - nodeList.get(focusIdx).yCurr);
+                float [] normVec = {
+                    (n.xCurr - nodeList.get(focusIdx).xCurr)/vecMag, 
+                    (n.yCurr - nodeList.get(focusIdx).yCurr)/vecMag 
+                };
+                /*TODO 18.05 - here should be + s * size_normal to the direction away from focus*/
+                /*TODO 18.05 - name if size > certain threshold*/
+                float [] sizePoint = {n.xCurr + s, n.yCurr  + s};
+                float [] qPoint = fisheyePos(sizePoint[0], sizePoint[1], 
+                        nodeList.get(focusIdx).xCurr,
+                        nodeList.get(focusIdx).yCurr,
+                        displaySize);
+                int fSize = fisheyeSize(qPoint[0], qPoint[1],
+                        fCoordinates[0],
+                        fCoordinates[1]);
+                g.fillOval( Math.round(fCoordinates[0]), Math.round(fCoordinates[1]), fSize, fSize);
+            } else {
+                g.fillOval( Math.round(xPaint), Math.round(yPaint), n.currSize, n.currSize);
+            }
         }
         
     }
@@ -101,6 +156,13 @@ public class Graph {
             this.highlighted = nearest.idx;
             return true;
         }
+    }
+    
+    public void focusTest(){
+
+            focusIdx = this.highlighted;
+       
+        
     }
     
     

@@ -37,41 +37,25 @@ public class GraphCanvas extends JPanel {
 
             }
         });
-}       
-    public void highlightNearest(int x, int y){
         
+        addMouseListener(new MouseAdapter(){
+            public void mousePressed(MouseEvent e){
+                System.out.println("fuckk");
+                focusTest();
+            }
+        });
+}   
+    public void focusTest(){   
+        this.graph.focusTest();
+        this.repaint();
+        
+    }
+    public void highlightNearest(int x, int y){   
         if (this.graph.highlightNearest(x, y)){
             this.repaint();
         }
-    
     }
-    
-  /*   private void moveSquare(int x, int y){
-         
-        // Current square state, stored as final variables 
-        // to avoid repeat invocations of the same methods.
-        final int CURR_X = redSquare.getX();
-        final int CURR_Y = redSquare.getY();
-        final int CURR_W = redSquare.getWidth();
-        final int CURR_H = redSquare.getHeight();
-        final int OFFSET = 1;
 
-        if ((CURR_X!=x) || (CURR_Y!=y)) {
-
-            // The square is moving, repaint background 
-            // over the old square location. 
-            repaint(CURR_X,CURR_Y,CURR_W+OFFSET,CURR_H+OFFSET);
-
-            // Update coordinates.
-            redSquare.setX(x);
-            redSquare.setY(y);
-
-            // Repaint the square at the new location.
-            repaint(redSquare.getX(), redSquare.getY(), 
-                    redSquare.getWidth()+OFFSET, 
-                    redSquare.getHeight()+OFFSET);
-        }
-    }*/
 
 
     public void paintComponent(Graphics g) {
