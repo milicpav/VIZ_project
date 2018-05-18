@@ -51,9 +51,11 @@ public class Main {
         f2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f2.add(new OptionPanel(g));
 //        f2.setSize(350, Toolkit.getDefaultToolkit().getScreenSize().height / 2);
-        f2.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+//        f2.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+        f2.setExtendedState(JFrame.MAXIMIZED_BOTH);//fullscreen
+//        f2.setUndecorated(true); // bez okraju
         f2.setVisible(true);
-        f2.setAlwaysOnTop(true);
+//        f2.setAlwaysOnTop(true);
         //
 //        OptionPanel op = new OptionPanel(g);
 //        GraphCanvas gc = new GraphCanvas(g);
