@@ -15,10 +15,11 @@ public class Node {
     final float x;
     final float y;
     final String tooltip;
+    String shortcut= "";
     
-    float xCurr;
-    float yCurr;
-    int currSize;
+    float xDisp, yDisp; // coordinates on display canvas without fisheye transformation
+    float xCurr, yCurr; // coordinates on display canvas after fisheye transformation
+    int currSize = 5;   // current size of the node
     
     boolean highlighted = false;
     
@@ -28,8 +29,10 @@ public class Node {
         this.y = y;
         xCurr = x;
         yCurr = y;
-        currSize = 10;
+        xDisp= x;
+        yDisp = y;
         this.tooltip = tooltip;
+        this.shortcut = tooltip.substring(0, 3);
         this.idx = idx;
     }
 

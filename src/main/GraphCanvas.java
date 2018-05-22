@@ -40,7 +40,6 @@ public class GraphCanvas extends JPanel {
         
         addMouseListener(new MouseAdapter(){
             public void mousePressed(MouseEvent e){
-                System.out.println("fuckk");
                 focusTest();
             }
         });
