@@ -13,11 +13,9 @@ import java.awt.RenderingHints;
 /**
  *
  * @author Pavel
- * @coathor simon
+ * @author kadlesim
  */
 public class Main {
-    //TODO: make a simple frame for visualization based on this and coordinates of the nodes  https://docs.oracle.com/javase/tutorial/uiswing/painting/refining.html
-	
 	
     public static void main(String[] args) {
         Graph g = new Graph();
@@ -30,48 +28,18 @@ public class Main {
             }
         });
         
-        
     }
     
     private static void createAndShowGUI(Graph g) {
         System.out.println("Created GUI on EDT? "+
         SwingUtilities.isEventDispatchThread());
-//        JFrame f = new JFrame("Swing Paint Demo");
-//        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        f.add(new GraphCanvas(g));
-//        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-//        f.setSize(screenSize);
-//
-//        //f.setSize(250,250);
-//        f.setVisible(true);
-//
-//
-//        //
-        JFrame f2 = new JFrame("form demo");
-        f2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f2.add(new OptionPanel(g));
-//        f2.setSize(350, Toolkit.getDefaultToolkit().getScreenSize().height / 2);
-//        f2.setSize(Toolkit.getDefaultToolkit().getScreenSize());
-        f2.setExtendedState(JFrame.MAXIMIZED_BOTH);//fullscreen
-//        f2.setUndecorated(true); // bez okraju
-        f2.setVisible(true);
-//        f2.setAlwaysOnTop(true);
-        //
-//        OptionPanel op = new OptionPanel(g);
-//        GraphCanvas gc = new GraphCanvas(g);
-//        JPanel jp = new JPanel();
-//        jp.setLayout(new BoxLayout(jp, BoxLayout.LINE_AXIS));
-//        jp.add(gc);
-//        jp.add(op);
-//
-//
-//        JFrame f3 = new JFrame("form demo");
-//        f3.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        f3.add(jp);
-////        f2.setSize(350, Toolkit.getDefaultToolkit().getScreenSize().height / 2);
-//        f3.setSize(Toolkit.getDefaultToolkit().getScreenSize());
-//        f3.setVisible(true);
-//        f2.setAlwaysOnTop(true);
-    } 
+
+        JFrame frame = new JFrame("Fish Eye - Visualization Project");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.add(new OptionPanel(g));
+        frame.setSize(1300,700);
+//        f2.setExtendedState(JFrame.MAXIMIZED_BOTH);//fullscreen
+        frame.setVisible(true);
+    }
     
 }
