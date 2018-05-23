@@ -1,11 +1,12 @@
 package main;
 
+import org.omg.CORBA.NO_IMPLEMENT;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
 
 public class OptionPanel extends JPanel {
@@ -36,6 +37,7 @@ public class OptionPanel extends JPanel {
                     graph.getNodeList()) {
                 n.highlighted = false;
             }
+            graph.removeFocusAll();
             graphCanvas.repaint();
         });
 
@@ -66,7 +68,8 @@ public class OptionPanel extends JPanel {
 
                 for (Node item : graph.getNodeList()) {
                     if (item.idx == nodeToRemove.idx) {
-                        item.highlighted = false;
+//                        item.highlighted = false;
+                        graph.removeFocus(item.idx);
                     }
                 }
                 graphCanvas.repaint();
@@ -94,10 +97,12 @@ public class OptionPanel extends JPanel {
 //                    newNodes.get(j).highlighted = true;
 //                }
 //            }
-                if (!newNode.highlighted) {
+                if (!graph.focusSet.contains(newNode.idx)) {
                     tmp[tmp.length - 1] = newNode;
-                    newNode.highlighted = true;
+//                    newNode.highlighted = true;
+                    graph.addFocus(newNode.idx);
                 }
+
 
                 selectedNodesJList.setListData(tmp);
                 graphCanvas.repaint();
@@ -117,20 +122,49 @@ public class OptionPanel extends JPanel {
             public void mouseClicked(MouseEvent e) {
 //                selectedNodesInfo.setText("");
 
-                int oldNodes = selectedNodesJList.getModel().getSize();
-                Node[] tmp = new Node[1 + oldNodes];
-                int index = 0;
-                for (int i = 0; i < oldNodes; i++, index++) {
-                    tmp[i] = selectedNodesJList.getModel().getElementAt(i);
+//                int oldNodes = selectedNodesJList.getModel().getSize();
+                ListModel<Node> oldNodesList = selectedNodesJList.getModel();
+                List<Node> newNodes = new ArrayList<>();
+                for (int i = 0; i < oldNodesList.getSize(); i++) {
+                    newNodes.add(oldNodesList.getElementAt(i));
                 }
+                List<Node> newNodesList = new ArrayList<>();
+                Node[] tmp;
+
                 for (Node n :
                         graph.getNodeList()) {
-                    if (n.highlighted && !contains(tmp, n)) {
-//                        selectedNodesInfo.append(n.toString() + "\n");
-                        tmp[tmp.length - 1] = n;
+                    if (!newNodes.contains(n) && graph.focusSet.contains(n.idx)) {
+                        newNodes.add(n);
+                        break;
+                    } else if (newNodes.contains(n) && !graph.focusSet.contains(n.idx)) {
+                        newNodes.remove(n);
                         break;
                     }
                 }
+//                int index = 0;
+//                for (int i = 0; i < oldNodes; i++, index++) {
+//                    tmp[i] = selectedNodesJList.getModel().getElementAt(i);
+//                }
+//                for (Node n :
+//                        graph.getNodeList()) {
+//                    if (graph.focusSet.contains(n.idx) && !contains(tmp, n)) {
+////                        selectedNodesInfo.append(n.toString() + "\n");
+//                        tmp[tmp.length - 1] = n;
+//                        break;
+//                    } else if (!graph.focusSet.contains(n.idx) && contains(tmp, n)){
+//                        tmp = new Node[oldNodes - 1];
+//                        for (int i = 0; i < oldNodes - 1; i++, index++) {
+//                            tmp[i] = selectedNodesJList.getModel().getElementAt(i);
+//                        }
+//                    }
+//                }
+
+                tmp = new Node[newNodes.size()];
+                for (int i = 0; i < newNodes.size(); i++) {
+                    tmp[i] = newNodes.get(i);
+                }
+
+
                 selectedNodesJList.setListData(tmp);
             }
 
@@ -229,8 +263,10 @@ public class OptionPanel extends JPanel {
     }
 
     boolean contains(Node[] nodes, Node node) {
-        for (int i = 0; i < nodes.length - 1; i++) {
-            if (nodes[i].idx == node.idx) return true;
+        if (nodes.length > 1) {
+            for (int i = 0; i < nodes.length - 1; i++) {
+                if (nodes[i].idx == node.idx) return true;
+            }
         }
         return false;
     }
