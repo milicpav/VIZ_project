@@ -57,8 +57,8 @@ public class Graph {
         for (Node n : nodeList){
             
             /*Compute the x and y Disp coordinates*/
-            xPaint = Math.round((n.x - this.xCenter) * scale + displaySize.width / 2 - n.currSize/2);
-            yPaint = Math.round((n.y - this.yCenter) * scale + displaySize.height / 2 - n.currSize/2 );
+            xPaint = Math.round((n.x - this.xCenter) * scale + displaySize.width / 2 - this.SIZE_NORMAL/2);
+            yPaint = Math.round((n.y - this.yCenter) * scale + displaySize.height / 2 - this.SIZE_NORMAL/2 );
             n.xDisp = xPaint;
             n.yDisp = yPaint;
             
@@ -75,13 +75,22 @@ public class Graph {
                     sumY += fTrans[1];
                     sumSize += fSize;
                 }
-                n.xCurr = sumX / focusSet.size();
-                n.yCurr = sumY / focusSet.size();
+                
                 n.currSize = Math.round(sumSize / focusSet.size());
+                n.xCurr = sumX / focusSet.size() ;
+                n.yCurr = sumY / focusSet.size() ;
+                
             } else if (focusSet.isEmpty()){
                 n.xCurr = n.xDisp;
                 n.yCurr = n.yDisp;
-                n.currSize = (int) SIZE_NORMAL;
+                if (Fisheye.apiUsed){
+                    n.currSize =(int) (Math.min(Math.log1p(1 + SIZE_NORMAL * Math.pow(scale, n.api)), 40.0) * Fisheye.c);
+                } else {
+                    n.currSize = (int) (SIZE_NORMAL * Fisheye.c);
+                }
+                n.xCurr = n.xDisp ;
+                n.yCurr = n.yDisp;
+                
             }
         }
         focusChanged = false;
@@ -340,7 +349,7 @@ public class Graph {
         catch (Exception e){
             e.printStackTrace();
         }
-    
+  
     }
 
     public Node[] getNodeList() {

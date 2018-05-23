@@ -15,7 +15,7 @@ public class Fisheye {
     static float d = 0.75f;         //distorsion
     static float s = 4.0f ;         // scale
     static float e = 0.5f;          // size-affecting par
-    static float c = 1.5f;          // size-affecting par
+    static float c = 1f;          // size-affecting par
     static boolean apiUsed = false; // apriori importance used for size
     static float cutoff = 0.f;      // cutoff not important nodes
     
