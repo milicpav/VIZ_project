@@ -19,18 +19,12 @@ import java.util.logging.Logger;
  */
 public class GraphCanvas extends JPanel {
     
-    RedSquare redSquare = new RedSquare();
     
     Graph graph;
     
     public GraphCanvas(Graph graph) {        
         this.graph = graph;
-        /*addMouseListener(new MouseAdapter(){
-            public void mousePressed(MouseEvent e){
-                moveSquare(e.getX(),e.getY());
-            }
-        });
-*/
+
         addMouseMotionListener(new MouseAdapter(){
             public void mouseMoved(MouseEvent e){
                 highlightNearest(e.getX(), e.getY());
@@ -45,7 +39,7 @@ public class GraphCanvas extends JPanel {
         });
 }   
     public void focusTest(){   
-        this.graph.focusTest();
+        this.graph.handleFocusClick();
         this.repaint();
         
     }
@@ -60,7 +54,6 @@ public class GraphCanvas extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);       
         graph.paint(g, this.getSize());
-        //redSquare.paintSquare(g);
     }  
 
     

@@ -12,12 +12,12 @@ import java.awt.Dimension;
  * @author Pavel
  */
 public class Fisheye {
-    static float d = 0.75f;
-    static float s = 4.0f ;
-    static float e = 0.5f;
-    static float c = 1.5f;
-    static boolean apiUsed = false;
-    static float cutoff = 0.f;
+    static float d = 0.75f;         //distorsion
+    static float s = 4.0f ;         // scale
+    static float e = 0.5f;          // size-affecting par
+    static float c = 1.5f;          // size-affecting par
+    static boolean apiUsed = false; // apriori importance used for size
+    static float cutoff = 0.f;      // cutoff not important nodes
     
     /**
      Compute the position on the canvas in fisheye Coordinates based on position 
