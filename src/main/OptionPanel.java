@@ -142,44 +142,49 @@ public class OptionPanel extends JPanel {
         });
 
         distortion.addChangeListener(e -> {
-            if (!distortion.getValueIsAdjusting()) {
+//            if (!distortion.getValueIsAdjusting()) {
                 Fisheye.setD((float) distortion.getValue() / 100);
                 System.out.println("D > " + (float) distortion.getValue() / 100);
-                graph.focus = true;
+                graph.focusChanged = true;
                 graphCanvas.repaint();
-            }
+//            }
         });
         scale.addChangeListener(e -> {
-            if (!distortion.getValueIsAdjusting()) {
+//            if (!distortion.getValueIsAdjusting()) {
                 Fisheye.setS((float) scale.getValue());
                 System.out.println("S > " + (float) scale.getValue());
+                graph.focusChanged = true;
                 graphCanvas.repaint();
-            }
+//            }
 
         });
         sizeParamE.addChangeListener(e -> {
-            if (!distortion.getValueIsAdjusting()) {
+//            if (!distortion.getValueIsAdjusting()) {
                 Fisheye.setE((float) sizeParamE.getValue() / 10);
                 System.out.println("E > " + (float) sizeParamE.getValue() / 10);
+                graph.focusChanged = true;
                 graphCanvas.repaint();
-            }
+//            }
         });
         sizeParamC.addChangeListener(e -> {
-            if (!distortion.getValueIsAdjusting()) {
+//            if (!distortion.getValueIsAdjusting()) {
                 Fisheye.setC((float) sizeParamC.getValue() / 10);
                 System.out.println("C > " + (float) sizeParamC.getValue() / 10);
+                graph.focusChanged = true;
                 graphCanvas.repaint();
-            }
+//            }
         });
         cutOff.addChangeListener(e -> {
-            if (!distortion.getValueIsAdjusting()) {
+//            if (!distortion.getValueIsAdjusting()) {
                 Fisheye.setCutoff((float) cutOff.getValue() / 10);
                 System.out.println("cutOff > " + (float) cutOff.getValue() / 10);
+                graph.focusChanged = true;
                 graphCanvas.repaint();
-            }
+//            }
         });
         api.addItemListener(e -> {
             Fisheye.setApiUsed(api.isSelected());
+            graph.focusChanged = true;
             graphCanvas.repaint();
         });
     }

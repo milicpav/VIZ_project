@@ -34,7 +34,7 @@ public class Graph {
     private final float SIZE_NORMAL = 6;                // node original size
     public int highlighted = -1;                        // index of highlighted node
     public HashSet<Integer> focusSet = new HashSet<>(); // set of focused nodes indices
-    private boolean focusChanged = false;               // internal bool value for triggering coordinate computation
+    public boolean focusChanged = false;               // internal bool value for triggering coordinate computation
     
     private float xCenter;  // centroid of x geo coordinates
     private float yCenter;  // centroid of y geo coordinates
