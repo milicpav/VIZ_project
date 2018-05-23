@@ -11,6 +11,7 @@ import java.util.List;
 
 public class OptionPanel extends JPanel {
     //    JButton showButton;
+    JPanel paramPanel;
     JButton addButton;
     JButton removeButton;
     JButton clearButton;
@@ -181,6 +182,8 @@ public class OptionPanel extends JPanel {
     }
 
     public void createUIElements() {
+        paramPanel = new JPanel();
+        initParamPanel();
         //show button - higlights selected nodes on map and shows info
 //        showButton = new JButton("Select");
 //        showButton.setName("showButton");
@@ -260,6 +263,15 @@ public class OptionPanel extends JPanel {
 
 //        this.add(graphPanel);
 //        this.add(optionsPanel);
+    }
+
+    public void initParamPanel(){
+        JSlider distortion = new JSlider(JSlider.HORIZONTAL, 0, 10, (int) Fisheye.d * 10); //pak musim delit 10
+        JSlider scale = new JSlider(JSlider.HORIZONTAL, 0, 50, (int) Fisheye.s);
+        JSlider sizeParamE = new JSlider(JSlider.HORIZONTAL, 0, 10, (int) Fisheye.e * 10); //pak musim delit 10
+        JSlider sizeParamC = new JSlider(JSlider.HORIZONTAL, 0, 10, (int) Fisheye.c * 10); //pak musim delit 10
+        JSlider cutOff = new JSlider(JSlider.HORIZONTAL, 0, 10, (int) Fisheye.cutoff * 10); //pak musim delit 10
+        JCheckBox api = new JCheckBox();
     }
 
     boolean contains(Node[] nodes, Node node) {
