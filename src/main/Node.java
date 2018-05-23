@@ -16,6 +16,7 @@ public class Node {
     final float y;
     final String tooltip;
     String shortcut= "";
+    int api;
     
     float xDisp, yDisp; // coordinates on display canvas without fisheye transformation
     float xCurr, yCurr; // coordinates on display canvas after fisheye transformation

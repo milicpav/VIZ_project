@@ -52,14 +52,7 @@ public class Graph {
         
         // Draw nodes
         for (Node n : nodeList){
-            g.setColor(new Color(255, 0,0));
-            if (focusSet.contains(n.idx)){
-                g.setColor(new Color(0, 255,0));
-            }
-            if (n.highlighted){
-                g.setColor(Color.BLUE);
-                g.drawString(n.tooltip,10,20);
-            }
+            
             /*Compute the x and y Disp coordinates*/
             xPaint = Math.round((n.x - this.xCenter) * scale + displaySize.width / 2 - SIZE_NORMAL/2);
             yPaint = Math.round((n.y - this.yCenter) * scale + displaySize.height / 2 - SIZE_NORMAL/2 );
@@ -67,18 +60,26 @@ public class Graph {
             n.yDisp = yPaint;
             
             /*compute the transformed coordinates*/
-            if (focusIdx != -1){
-                float [] fTrans = fisheyeTransform(n, focusIdx, displaySize);
-                int fSize = Math.round(fTrans[2]);
-                n.xCurr = fTrans[0];
-                n.yCurr = fTrans[1];
-                n.currSize = fSize;
-                //g.fillOval( Math.round(fTrans[0]), Math.round(fTrans[1]), fSize, fSize);
+            if (!focusSet.isEmpty()){
+                float sumX = 0.f; 
+                float sumY = 0.f;
+                float sumSize = 0.f;
+                
+                for (Integer focIdx : focusSet){
+                    float [] fTrans = fisheyeTransform(n, focIdx, displaySize);
+                    int fSize = Math.round(fTrans[2]);
+                    sumX += fTrans[0];
+                    sumY += fTrans[1];
+                    sumSize += fSize;
+                }
+                n.xCurr = sumX / focusSet.size();
+                n.yCurr = sumY / focusSet.size();
+                n.currSize = (int) (sumSize / focusSet.size());
+                
             } else {
                 n.xCurr = n.xDisp;
                 n.yCurr = n.yDisp;
                 n.currSize = (int) SIZE_NORMAL;
-                //g.fillOval( Math.round(xPaint), Math.round(yPaint), n.currSize, n.currSize);
             }
         }
         
@@ -86,35 +87,40 @@ public class Graph {
         for (int i = 0; i < this.adjList.size(); i++){
             for (Integer j : this.adjList.get(i)){
                 g.setColor(new Color(0, 0,0, 25));
+                if (this.focusSet.contains(j) && this.focusSet.contains(i)){
+                    g.setColor(new Color(66,164,86));
+                }
                 if (this.highlighted == i || this.highlighted == j){
                     g.setColor(Color.BLACK); 
                 }
+                
+                if (nodeList.get(i).currSize > Fisheye.cutoff && 
+                        nodeList.get(j).currSize > Fisheye.cutoff){
                     g.drawLine(Math.round(this.nodeList.get(i).xCurr + this.nodeList.get(i).currSize/2), 
                                Math.round(this.nodeList.get(i).yCurr+ this.nodeList.get(i).currSize/2),
                                Math.round(this.nodeList.get(j).xCurr+ this.nodeList.get(j).currSize/2),
                                Math.round(this.nodeList.get(j).yCurr+ this.nodeList.get(j).currSize/2));
+                }
+                            
                 
             }
         }
         for (Node n : nodeList){
-            g.setColor(new Color(255, 0,0));
+            g.setColor(new Color(53,151,223));
             if (focusSet.contains(n.idx)){
-                g.setColor(new Color(0, 255,0));
+                g.setColor(new Color(66,164,86));
             }
             if (n.highlighted){
-                g.setColor(Color.BLUE);
+                g.setColor(new Color(225,112,81));
                 g.drawString(n.tooltip,10,20);
             }
             
-            if (focusIdx != -1){
-                float [] fTrans = fisheyeTransform(n, focusIdx, displaySize);
-                int fSize = Math.round(fTrans[2]);
-                n.xCurr = fTrans[0];
-                n.yCurr = fTrans[1];
-                n.currSize = fSize;
-                g.fillOval( Math.round(n.xCurr), Math.round(n.yCurr), n.currSize, n.currSize);
-            } else {
-                g.fillOval( Math.round(n.xDisp), Math.round(n.yDisp), n.currSize, n.currSize);
+            if (n.currSize > Fisheye.cutoff){
+                if (focusIdx != -1){
+                    g.fillOval( Math.round(n.xCurr), Math.round(n.yCurr), n.currSize, n.currSize);
+                } else {
+                    g.fillOval( Math.round(n.xDisp), Math.round(n.yDisp), n.currSize, n.currSize);
+                }
             }
         }
         
@@ -145,13 +151,16 @@ public class Graph {
                     sizePoint[1] = sizePoint[1] - Fisheye.s * SIZE_NORMAL;
                 }
                 
-                float [] qPoint = Fisheye.fisheyePos(sizePoint[0], sizePoint[1], 
+                float [] qPoint = Fisheye.fisheyePos(sizePoint[0], 
+                        sizePoint[1], 
                         nodeList.get(focusIdx).xDisp,
                         nodeList.get(focusIdx).yDisp,
                         displaySize);
-                int fSize = Fisheye.fisheyeSize(qPoint[0], qPoint[1],
+                int fSize = Fisheye.fisheyeSize(qPoint[0], 
+                        qPoint[1],
                         fCoordinates[0],
-                        fCoordinates[1]);
+                        fCoordinates[1],
+                        n.api);
                 float res [] = {fCoordinates[0], fCoordinates[1], fSize};
                 return res;
     }
@@ -161,10 +170,12 @@ public class Graph {
         float minDist = Float.POSITIVE_INFINITY;
         float dst;
         for  (Node n : nodeList){
-            dst = (n.xCurr - x)* (n.xCurr - x) + (n.yCurr - y)* (n.yCurr - y);
-            if (dst < minDist){
-                nearest = n;
-                minDist = dst;
+            if (n.currSize > Fisheye.cutoff){
+                dst = (n.xCurr - x)* (n.xCurr - x) + (n.yCurr - y)* (n.yCurr - y);
+                if (dst < minDist){
+                    nearest = n;
+                    minDist = dst;
+                }
             }
         }
         if (nearest != null) {
@@ -189,11 +200,23 @@ public class Graph {
             this.focusSet.add(this.highlighted);
         }
             focusIdx = this.highlighted;
-       
-        
     }
     
+    public void addFocus(int nodeIdx){
+        this.focusSet.add(focusIdx);
+    }
     
+    public void removeFocus(int nodeIdx){
+        this.focusSet.remove(focusIdx);
+    }
+    
+    public void removeFocusAll(){
+        this.focusSet.clear();
+    }
+    
+    /** 
+     Imports the graph file from specified filepath
+     */
     public void importFromFile(String filepath) {
         try {
             File inputFile = new File(filepath);
@@ -268,6 +291,7 @@ public class Graph {
             this.yCenter = yCum / nList.getLength();
             this.xRange = xMax - xMin + CANVAS_OFFSET;
             this.yRange = yMax - yMin + CANVAS_OFFSET;
+            int [] apis = new int[nList.getLength()];
              NodeList eList = doc.getElementsByTagName("edge");
              int src, tgt;
              for (int i = 0; i < eList.getLength(); i++){
@@ -281,8 +305,15 @@ public class Graph {
                     //System.out.println(currNode.getAttributes().getNamedItem("source").getTextContent());
                     //System.out.println(currNode.getAttributes().getNamedItem("target").getTextContent());     
                     this.adjList.get(src).add(tgt);
+                    apis[src] = apis[src] + 1;
+                    apis[tgt] = apis[tgt] + 1;
                 }
              }
+             for(int i = 0; i < apis.length; i++){
+                 nodeList.get(i).api = apis[i];
+             }
+             
+             
         }
         catch (Exception e){
             e.printStackTrace();
