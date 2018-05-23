@@ -1,16 +1,17 @@
 package main;
 
-import org.omg.CORBA.NO_IMPLEMENT;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
+/**
+ *
+ */
 public class OptionPanel extends JPanel {
-    //    JButton showButton;
     JPanel paramPanel;
     JButton addButton;
     JButton removeButton;
@@ -30,15 +31,12 @@ public class OptionPanel extends JPanel {
     JSlider cutOff; //pak musim delit 10
     JCheckBox api;
 
-    // TODO: 14. 5. 2018 - kdyz se vybere vic nodu, tak vlevo nahore info je necitelne
-    // TODO: 14. 5. 2018 - nezobrazuji se s vybranymi nody prilehle hrany, je to  dobre/spatne?
     public OptionPanel(Graph graph) {
         this.graph = graph;
         createUIElements();
 
-        //clears textArea/jlist
+        //clears jlist
         clearButton.addActionListener(e -> {
-//            selectedNodesInfo.setText("");
             selectedNodesJList.setListData(new Node[0]);
             for (Node n :
                     graph.getNodeList()) {
@@ -51,7 +49,6 @@ public class OptionPanel extends JPanel {
         //removes selected
         removeButton.addActionListener(e -> {
 
-//            List<Node> toRemove = selectedNodesJList.getSelectedValuesList();
             Node nodeToRemove = selectedNodesJList.getSelectedValue();
             if (nodeToRemove != null) {
                 int oldNodes = selectedNodesJList.getModel().getSize();
@@ -75,7 +72,6 @@ public class OptionPanel extends JPanel {
 
                 for (Node item : graph.getNodeList()) {
                     if (item.idx == nodeToRemove.idx) {
-//                        item.highlighted = false;
                         graph.removeFocus(item.idx);
                     }
                 }
@@ -83,30 +79,20 @@ public class OptionPanel extends JPanel {
             }
         });
 
-        //adds selected nodes to textarea/jlist
+        //adds selected nodes to jlist
         addButton.addActionListener(e -> {
 
-            //funguje, ale neni to "pekne" + je to pomale
             int oldNodes = selectedNodesJList.getModel().getSize();
             Node newNode = nodeJList.getSelectedValue();
             if (newNode != null) {
                 Node[] tmp = new Node[1 + oldNodes];
-//            selectedNodesInfo.setText("");
                 int index = 0;
                 for (int i = 0; i < oldNodes; i++, index++) {
                     tmp[i] = selectedNodesJList.getModel().getElementAt(i);
                 }
 
-//            for (int i = index, j = 0; j < newNodes.size(); i++, j++) {
-//                if (!newNodes.get(j).highlighted) {
-////                    selectedNodesInfo.append(n.toString() + "\n");
-//                    tmp[i] = newNodes.get(j);
-//                    newNodes.get(j).highlighted = true;
-//                }
-//            }
                 if (!graph.focusSet.contains(newNode.idx)) {
                     tmp[tmp.length - 1] = newNode;
-//                    newNode.highlighted = true;
                     graph.addFocus(newNode.idx);
                 }
 
@@ -157,8 +143,9 @@ public class OptionPanel extends JPanel {
 
         distortion.addChangeListener(e -> {
             if (!distortion.getValueIsAdjusting()) {
-                Fisheye.setD((float) distortion.getValue()/100);
-                System.out.println("D > " + (float) distortion.getValue()/100);
+                Fisheye.setD((float) distortion.getValue() / 100);
+                System.out.println("D > " + (float) distortion.getValue() / 100);
+                graph.focus = true;
                 graphCanvas.repaint();
             }
         });
@@ -172,22 +159,22 @@ public class OptionPanel extends JPanel {
         });
         sizeParamE.addChangeListener(e -> {
             if (!distortion.getValueIsAdjusting()) {
-                Fisheye.setE((float) sizeParamE.getValue()/10);
-                System.out.println("E > " + (float) sizeParamE.getValue()/10);
+                Fisheye.setE((float) sizeParamE.getValue() / 10);
+                System.out.println("E > " + (float) sizeParamE.getValue() / 10);
                 graphCanvas.repaint();
             }
         });
         sizeParamC.addChangeListener(e -> {
             if (!distortion.getValueIsAdjusting()) {
-                Fisheye.setC((float) sizeParamC.getValue()/10);
-                System.out.println("C > " + (float) sizeParamC.getValue()/10);
+                Fisheye.setC((float) sizeParamC.getValue() / 10);
+                System.out.println("C > " + (float) sizeParamC.getValue() / 10);
                 graphCanvas.repaint();
             }
         });
         cutOff.addChangeListener(e -> {
             if (!distortion.getValueIsAdjusting()) {
-                Fisheye.setCutoff((float) cutOff.getValue()/10);
-                System.out.println("cutOff > " + (float) cutOff.getValue()/10);
+                Fisheye.setCutoff((float) cutOff.getValue() / 10);
+                System.out.println("cutOff > " + (float) cutOff.getValue() / 10);
                 graphCanvas.repaint();
             }
         });
@@ -219,7 +206,7 @@ public class OptionPanel extends JPanel {
         infoLabel2 = new JLabel();
         infoLabel2.setText("List of selected airports: ");
         JLabel paramLabel = new JLabel("Parameters setting");
-        paramLabel.setBorder(BorderFactory.createEmptyBorder(10,0,5,0));
+        paramLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 5, 0));
         //lists all nodes
         nodeJList = new JList<>(graph.getNodeList());
         nodeJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -249,12 +236,12 @@ public class OptionPanel extends JPanel {
         JPanel buttonJP = new JPanel();
 
         //borders
-        infoLabel.setBorder(BorderFactory.createEmptyBorder(5,0,5,0));
-        infoLabel2.setBorder(BorderFactory.createEmptyBorder(5,0,5,0));
+        infoLabel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+        infoLabel2.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
 //        listScroller.setBorder(BorderFactory.createEmptyBorder(5,0,5,0));
 //        textAreaScroller.setBorder(BorderFactory.createEmptyBorder(5,0,5,0));
 //        clearButton.setBorder(BorderFactory.createEmptyBorder(5,0,5,0));
-        buttonJP.setBorder(BorderFactory.createEmptyBorder(5,0,5,0));
+        buttonJP.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
 
         //layout
         buttonJP.setLayout(new BoxLayout(buttonJP, BoxLayout.X_AXIS));
@@ -294,7 +281,7 @@ public class OptionPanel extends JPanel {
 //        this.add(optionsPanel);
     }
 
-    public void initParamPanel(){
+    public void initParamPanel() {
         paramPanel.setBackground(Color.LIGHT_GRAY);
         paramPanel.setBorder(BorderFactory.createLineBorder(Color.black));
         JLabel disLabel = new JLabel("Distortion");
