@@ -214,6 +214,8 @@ public class Graph {
         }
         if (nearest != null) {
             nearest.highlighted = true;
+        } else {
+            return false;
         }
         if (this.highlighted == nearest.idx){
             return false;
